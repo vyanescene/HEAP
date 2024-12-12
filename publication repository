@@ -1,0 +1,61 @@
+import java.util.PriorityQueue;
+
+/**
+ * Manages the top N most-rated publications by users.
+ */
+public class PublicationRepository {
+    private PriorityQueue<Publication> topRatedPublications;
+    private int maxCapacity;
+
+    public PublicationRepository(int maxCapacity) {
+        this.maxCapacity = maxCapacity;
+        this.topRatedPublications = new PriorityQueue<>();
+    }
+
+    /**
+     * Adds a publication to the top-rated publications list.
+     *
+     * @param publication the publication to add
+     */
+    public void addPublication(Publication publication) {
+        if (topRatedPublications.size() < maxCapacity) {
+            topRatedPublications.add(publication);
+        } else if (publication.getRating() > topRatedPublications.peek().getRating()) {
+            topRatedPublications.poll();
+            topRatedPublications.add(publication);
+        }
+    }
+
+    /**
+     * Retrieves the top N most-rated publications.
+     *
+     * @return the top N most-rated publications
+     */
+    public PriorityQueue<Publication> getTopRatedPublications() {
+        return topRatedPublications;
+    }
+
+    public static void main(String[] args) {
+        PublicationRepository repository = new PublicationRepository(5);
+
+        Publication publication1 = new Publication("Publication 1", "Author 1", 5);
+        Publication publication2 = new Publication("Publication 2", "Author 2", 4);
+        Publication publication3 = new Publication("Publication 3", "Author 3", 3);
+        Publication publication4 = new Publication("Publication 4", "Author 4", 2);
+        Publication publication5 = new Publication("Publication 5", "Author 5", 1);
+        Publication publication6 = new Publication("Publication 6", "Author 6", 6);
+
+        repository.addPublication(publication1);
+        repository.addPublication(publication2);
+        repository.addPublication(publication3);
+        repository.addPublication(publication4);
+        repository.addPublication(publication5);
+        repository.addPublication(publication6);
+
+        PriorityQueue<Publication> topRatedPublications = repository.getTopRatedPublications();
+        System.out.println("Top Rated Publications:");
+        while (!topRatedPublications.isEmpty()) {
+            System.out.println(topRatedPublications.poll());
+        }
+    }
+}
